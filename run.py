@@ -2,7 +2,7 @@
 import os
 from flask import Flask
 from flask_restful import Api
-from app.config import app_config
+from config import app_config
 from app.resources import OperationList, OperationResource, UserResource, UploadResource
 from app.db import db
 

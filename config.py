@@ -9,7 +9,7 @@ class Config(object):
     DEBUG = False
     CSRF_ENABLED = True
     SECRET = os.getenv('SECRET')
-    SQLALCHEMY_DATABASE_URI = "sqlite://"+os.path.join(BASEDIR,os.getenv('DATABASE_URL').split("///")[-1])
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
     APP_URL = "127.0.0.1"
     SQLALCHEMY_TRACK_MODIFICATIONS=False
 
