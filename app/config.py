@@ -10,7 +10,7 @@ class Config(object):
     CSRF_ENABLED = True
     SECRET = os.getenv('SECRET')
     SQLALCHEMY_DATABASE_URI = "sqlite://"+os.path.join(BASEDIR,os.getenv('DATABASE_URL').split("///")[-1])
-    APP_URL = "http://localhost:5000"
+    APP_URL = "127.0.0.1"
     SQLALCHEMY_TRACK_MODIFICATIONS=False
 
     # Business config
@@ -36,7 +36,7 @@ class ProductionConfig(Config):
     # Production configuration class
     DEBUG = False
     TESTING = False
-    APP_URL = "https://nn-rest-api.herokuapp.com:5000"
+    APP_URL = "nn-rest-api.herokuapp.com"
 
 
 app_config = {
