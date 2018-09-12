@@ -36,7 +36,7 @@ class ProductionConfig(Config):
     # Production configuration class
     DEBUG = False
     TESTING = False
-    APP_URL = "Heroku url"
+    APP_URL = "https://nn-rest-api.herokuapp.com:5000"
 
 
 app_config = {
