@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # RESTful Api for replacing some content of the file from provided keyword list
 
 
@@ -42,6 +41,4 @@ $ python run.py
 ```
 
 Application will run on port 5000 by default
-=======
-# nn_rest_api_example
->>>>>>> eb81fd2633c3bbadeece65c735bca96dda793ccd
+
