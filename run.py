@@ -27,4 +27,4 @@ api.add_resource(UploadResource, '/'+app.config['UPLOAD_FOLDER']+'/<string:filen
 # Calling main
 if __name__ == '__main__':
     print(app.config['APP_URL'])
-    app.run(debug=app.config['DEBUG'], host=app.config['APP_URL'],port='5000')
+    app.run(debug=app.config['DEBUG'], host=app.config['APP_URL'],port=os.getenv('PORT'))
