@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 import os
-from flask import Flask
+#from flask import Flask
 from flask_restful import Api
 from config import app_config
-from app.resources import OperationList, OperationResource, UserResource, UploadResource
+from app.resources import MainPage, OperationList, OperationResource, UserResource, UploadResource
 from app.db import db
 
 # This will load app/__init__.py file which Flask will load Flask
@@ -17,6 +17,7 @@ api = Api(app)
 db.init_app(app)
 
 # Declaring Resources of REST API
+api.add_resource(MainPage, '/', endpoint='main')
 api.add_resource(OperationList, '/operations/all', endpoint='operations')
 api.add_resource(OperationResource, '/operations', endpoint='operation_new')
 api.add_resource(OperationResource, '/operations/<string:id>', endpoint='operation')

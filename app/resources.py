@@ -19,7 +19,6 @@ from app.db import db, session
 # Loading config parameters to local variables
 UPLOAD_FOLDER=app.config['UPLOAD_FOLDER']
 ALLOWED_EXTENSIONS=app.config['ALLOWED_EXTENSIONS']
-APP_URL=app.config['APP_URL']
 TRADEMARK_SYMBOL=app.config['TRADEMARK_SYMBOL']
 BASEDIR=app.config['BASEDIR']
 
@@ -77,6 +76,11 @@ parser.add_argument('keyword', type=werkzeug.FileStorage, location='files')
 # if specified Delete related files of while removing operation
 parser.add_argument('delete_files')
 
+
+class MainPage(Resource):
+    def get(self):
+        welcome="Hello"
+        return welcome, 200
 
 class OperationResource(Resource):
     
@@ -168,7 +172,7 @@ class OperationResource(Resource):
             user = session.query(UserModel).filter(UserModel.user == request.authorization.username).first()
             
             # Saving as a new operation to database
-            operation = OperationModel(original_filename, os.path.join(APP_URL, UPLOAD_FOLDER, original_file_n), os.path.join(APP_URL, UPLOAD_FOLDER, keyword_n), os.path.join(APP_URL, UPLOAD_FOLDER, generated_file_n), count, user.id)
+            operation = OperationModel(original_filename, os.path.join(request.host_url, UPLOAD_FOLDER, original_file_n), os.path.join(request.host_url, UPLOAD_FOLDER, keyword_n), os.path.join(request.host_url, UPLOAD_FOLDER, generated_file_n), count, user.id)
             OperationModel.add(operation)
             return operation, 201
 
@@ -254,6 +258,22 @@ class UserResource(Resource):
         parsed_args = parser.parse_args()        
         user=parsed_args['user']
         password=parsed_args['password']
+
+        # checking input parameters
+        if user is None or password is None:
+
+            response=[]
+
+            # Check if user was specified
+            if user is None:
+                response.append("User parameter has not been specified: Type->Text")
+
+            # check if password was specified
+            if password is None:
+                response.append("Password parameter has not been specified: Type->Text")
+
+            abort(400, status="fail", message=response)
+
         if session.query(UserModel).filter(UserModel.user == user).first():
             abort(409, status="fail", message="Username is taken")
         
@@ -290,7 +310,7 @@ class UploadResource(Resource):
         if not os.path.exists(os.path.join(BASEDIR, UPLOAD_FOLDER, filename)):
             abort(404, status="fail", message="No such file")
 
-        file_link=os.path.join(APP_URL, UPLOAD_FOLDER, filename)
+        file_link=os.path.join(request.host_url, UPLOAD_FOLDER, filename)
         user=session.query(UserModel).filter(UserModel.user == request.authorization.username).first()
         operation=session.query(OperationModel).filter(or_(OperationModel.generated_file == file_link, OperationModel.original_file == file_link, OperationModel.keyword == file_link)).first()
 
