@@ -19,9 +19,9 @@ db.init_app(app)
 # Declaring Resources of REST API
 api.add_resource(MainPage, '/', endpoint='main')
 api.add_resource(OperationList, '/operations', endpoint='operationlist')
-api.add_resource(OperationId, '/operations/<string:id>', endpoint='operationid')
+api.add_resource(OperationId, '/operations/<int:id>', endpoint='operationid')
 api.add_resource(MyUser, '/user', endpoint='myuser')
-api.add_resource(UserId, '/user/<string:id>', endpoint='userid')
+api.add_resource(UserId, '/user/<int:id>', endpoint='userid')
 api.add_resource(UploadFile, '/'+app.config['UPLOAD_FOLDER']+'/<string:filename>', endpoint='files')
 
 # Calling main
