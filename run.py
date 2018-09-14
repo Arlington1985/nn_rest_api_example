@@ -16,6 +16,7 @@ api = Api(app, catch_all_404s=True)
 # Bound database
 db.init_app(app)
 
+
 # Declaring Resources of REST API
 api.add_resource(MainPage, '/', endpoint='main')
 api.add_resource(OperationList, '/operations', endpoint='operationlist')
@@ -26,5 +27,4 @@ api.add_resource(UploadFile, '/'+app.config['UPLOAD_FOLDER']+'/<string:filename>
 
 # Calling main
 if __name__ == '__main__':
-    print(app.config['APP_URL'])
     app.run(debug=app.config['DEBUG'], host=app.config['APP_URL'],port=os.getenv('PORT'))

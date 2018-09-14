@@ -1,6 +1,6 @@
 # Main application logic is here
 import os, uuid
-from flask import Flask,  request, send_from_directory, url_for, make_response, jsonify, abort
+from flask import request, send_from_directory, url_for, make_response, jsonify, abort, render_template
 from flask_restful import Resource, reqparse, marshal_with, abort, fields
 from flask_httpauth import HTTPBasicAuth
 from sqlalchemy import or_
@@ -78,9 +78,13 @@ parser.add_argument('delete_files')
 
 
 class MainPage(Resource):
+
     def get(self):
-        welcome="Hello"
-        return welcome, 200
+        headers = {'Content-Type': 'text/html'}
+        return make_response(render_template('index.html'),200,headers)
+
+
+
 
 class OperationId(Resource):
     
