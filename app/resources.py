@@ -95,6 +95,71 @@ class OperationId(Resource):
         return operation, 200
 
         
+    # Delete operation by operation id
+    @auth.login_required
+    @marshal_with(operation_fields)
+    def delete(self, id):
+        
+        
+
+        parsed_args = parser.parse_args()        
+        delete_files=parsed_args['delete_files']
+        user = session.query(UserModel).filter(UserModel.user == request.authorization.username).first()
+        operation = session.query(OperationModel).filter(OperationModel.id == id, OperationModel.user_id ==user.id).first()
+
+
+        # checking if requested operation exists
+        if not operation:
+            abort(404, status="fail", message="No such operation")
+
+        # Deleting operation
+
+        # Deleting related files if specified
+        
+        # Getting current session, it's not possible to delete row 
+        # in SQLite while it's running on another session
+        curr_sess=db.session.object_session(operation)
+        curr_sess.delete(operation)
+        del_count=0
+        
+        full_original=os.path.join(BASEDIR, UPLOAD_FOLDER, operation.original_file.split("/")[-1])
+        if not os.path.exists(full_original) or os.remove(full_original):
+            del_count+=1
+
+        full_keyword=os.path.join(BASEDIR, UPLOAD_FOLDER, operation.keyword.split("/")[-1])
+        if not os.path.exists(full_keyword) or os.remove(full_keyword):
+            del_count+=1
+
+        full_generated=os.path.join(BASEDIR, UPLOAD_FOLDER, operation.generated_file.split("/")[-1])
+        if not os.path.exists(full_generated) or os.remove(full_generated):
+            del_count+=1
+            
+        if del_count == 3:
+            curr_sess.commit()
+        else:
+            curr_sess.rollback()
+            abort(501, status="error", message="Cannot delete one of the related file, delete was not performed")
+
+
+        return operation, 204
+
+
+class OperationList(Resource):
+
+    # Listing operations
+    @auth.login_required
+    @marshal_with(operation_fields)
+    def get(self):
+        user = session.query(UserModel).filter(UserModel.user == request.authorization.username).first()
+        operations = session.query(OperationModel).filter(OperationModel.user_id == user.id).all()
+        
+        # Checking if fetched operations list empty
+        if not operations:
+            return operations, 204
+
+        return operations, 200
+
+
     # Adding new operation ( Replacing content with adding Trademark symbol)
     @auth.login_required
     @marshal_with(operation_fields)
@@ -176,69 +241,6 @@ class OperationId(Resource):
             OperationModel.add(operation)
             return operation, 201
 
-    # Delete operation by operation id
-    @auth.login_required
-    @marshal_with(operation_fields)
-    def delete(self, id):
-        
-        
-
-        parsed_args = parser.parse_args()        
-        delete_files=parsed_args['delete_files']
-        user = session.query(UserModel).filter(UserModel.user == request.authorization.username).first()
-        operation = session.query(OperationModel).filter(OperationModel.id == id, OperationModel.user_id ==user.id).first()
-
-
-        # checking if requested operation exists
-        if not operation:
-            abort(404, status="fail", message="No such operation")
-
-        # Deleting operation
-
-        # Deleting related files if specified
-        
-        # Getting current session, it's not possible to delete row 
-        # in SQLite while it's running on another session
-        curr_sess=db.session.object_session(operation)
-        curr_sess.delete(operation)
-        del_count=0
-        
-        full_original=os.path.join(BASEDIR, UPLOAD_FOLDER, operation.original_file.split("/")[-1])
-        if not os.path.exists(full_original) or os.remove(full_original):
-            del_count+=1
-
-        full_keyword=os.path.join(BASEDIR, UPLOAD_FOLDER, operation.keyword.split("/")[-1])
-        if not os.path.exists(full_keyword) or os.remove(full_keyword):
-            del_count+=1
-
-        full_generated=os.path.join(BASEDIR, UPLOAD_FOLDER, operation.generated_file.split("/")[-1])
-        if not os.path.exists(full_generated) or os.remove(full_generated):
-            del_count+=1
-            
-        if del_count == 3:
-            curr_sess.commit()
-        else:
-            curr_sess.rollback()
-            abort(501, status="error", message="Cannot delete one of the related file, delete was not performed")
-
-
-        return operation, 204
-
-# Listing operations
-class OperationList(Resource):
-    @auth.login_required
-    @marshal_with(operation_fields)
-    def get(self):
-        user = session.query(UserModel).filter(UserModel.user == request.authorization.username).first()
-        operations = session.query(OperationModel).filter(OperationModel.user_id == user.id).all()
-        
-        # Checking if fetched operations list empty
-        if not operations:
-            return operations, 204
-
-        return operations, 200
-
-
 
 class MyUser(Resource):
     
@@ -251,22 +253,6 @@ class MyUser(Resource):
             abort(404, status="fail", message="No such user")
         return user
 
-
-parser.add_argument('user')
-parser.add_argument('password')
-
-
-class UserId(Resource):
-    
-    # User detail
-    @auth.login_required
-    @marshal_with(user_fields)
-    def get(self):
-        user=session.query(UserModel).filter(UserModel.user == request.authorization.username).first()
-        if not user:
-            abort(404, status="fail", message="No such user")
-        return user
-    
     # New user
     @marshal_with(user_fields)
     def post(self):
@@ -296,6 +282,22 @@ class UserId(Resource):
         UserModel.add(user)
         return user, 201
 
+
+parser.add_argument('user')
+parser.add_argument('password')
+
+
+class UserId(Resource):
+    
+    # User detail
+    @auth.login_required
+    @marshal_with(user_fields)
+    def get(self):
+        user=session.query(UserModel).filter(UserModel.user == request.authorization.username).first()
+        if not user:
+            abort(404, status="fail", message="No such user")
+        return user
+    
 
     # Delete curren logged user
     @auth.login_required
