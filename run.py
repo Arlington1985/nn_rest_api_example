@@ -3,7 +3,7 @@ import os
 #from flask import Flask
 from flask_restful import Api
 from config import app_config
-from app.resources import MainPage, OperationList, OperationResource, UserResource, UploadResource
+from app.resources import MainPage, OperationList, OperationId, MyUser, UserId, UploadFile
 from app.db import db
 
 # This will load app/__init__.py file which Flask will load Flask
@@ -11,19 +11,18 @@ from app import app
 
 
 # Initializing Flask-RESTful
-api = Api(app)
+api = Api(app, catch_all_404s=True)
 
 # Bound database
 db.init_app(app)
 
 # Declaring Resources of REST API
 api.add_resource(MainPage, '/', endpoint='main')
-api.add_resource(OperationList, '/operations/all', endpoint='operations')
-api.add_resource(OperationResource, '/operations', endpoint='operation_new')
-api.add_resource(OperationResource, '/operations/<string:id>', endpoint='operation')
-api.add_resource(UserResource, '/users', endpoint='users')
-api.add_resource(UserResource, '/users/<string:id>', endpoint='user')
-api.add_resource(UploadResource, '/'+app.config['UPLOAD_FOLDER']+'/<string:filename>', endpoint='files')
+api.add_resource(OperationList, '/operations', endpoint='operationlist')
+api.add_resource(OperationId, '/operations/<string:id>', endpoint='operationid')
+api.add_resource(MyUser, '/user', endpoint='myuser')
+api.add_resource(UserId, '/user/<string:id>', endpoint='userid')
+api.add_resource(UploadFile, '/'+app.config['UPLOAD_FOLDER']+'/<string:filename>', endpoint='files')
 
 # Calling main
 if __name__ == '__main__':

@@ -82,7 +82,7 @@ class MainPage(Resource):
         welcome="Hello"
         return welcome, 200
 
-class OperationResource(Resource):
+class OperationId(Resource):
     
     # Operation detail
     @auth.login_required
@@ -181,6 +181,8 @@ class OperationResource(Resource):
     @marshal_with(operation_fields)
     def delete(self, id):
         
+        
+
         parsed_args = parser.parse_args()        
         delete_files=parsed_args['delete_files']
         user = session.query(UserModel).filter(UserModel.user == request.authorization.username).first()
@@ -237,11 +239,24 @@ class OperationList(Resource):
         return operations, 200
 
 
+
+class MyUser(Resource):
+    
+    # User detail
+    @auth.login_required
+    @marshal_with(user_fields)
+    def get(self):
+        user=session.query(UserModel).filter(UserModel.user == request.authorization.username).first()
+        if not user:
+            abort(404, status="fail", message="No such user")
+        return user
+
+
 parser.add_argument('user')
 parser.add_argument('password')
 
 
-class UserResource(Resource):
+class UserId(Resource):
     
     # User detail
     @auth.login_required
@@ -303,7 +318,7 @@ class UserResource(Resource):
                 return user, 204
 
 #  View uploaded and generated resources
-class UploadResource(Resource):
+class UploadFile(Resource):
     @auth.login_required
     def get(self, filename):
         
