@@ -1,5 +1,9 @@
-<<<<<<< HEAD
 # Usage
+
+
+### Authentication method
+
+Basic Authentication with `user` and `password`
 
 ## User
 
@@ -15,8 +19,7 @@ Query Parameters
 This user and password will be used on *every query* excet this one in order to authenticate access rights
 
 
-
-### Return current user parameters
+### Get current user parameters
 The current user parameters can be queried with 
 
 `GET /user`
@@ -25,9 +28,8 @@ Query Parameters
 * None
 
 
-
-### Delete user 
-Also possible to delete user with
+### Delete selected user 
+Also possible to delete user if you are authenticated to do that
 
 `DELETE /user/<int: id>`
 
@@ -36,7 +38,10 @@ Query Parameters
 
 Keep in mind that if you will delete user all related operations data including files also will be deleted
 
+
+
 ## Operations
+
 
 ### Create operation
 In order to replace special keywords with their tradmarked replacement you need to create operation with
@@ -47,7 +52,6 @@ Query Parameters
 * file - Document file
 * keyword - Keyword file
 
-
 ### Return all operation
 The current user parameters can be queried with 
 
@@ -55,7 +59,6 @@ The current user parameters can be queried with
 
 Query Parameters
 * None
-
 
 ### Return selected operation
 To return selected operations parameters 
@@ -65,40 +68,20 @@ To return selected operations parameters
 Query Parameters
 * None
 
-
 ### Delete selected operation
 To delete selected operation
 
 `GET /operations/<int: id>`
-=======
-# Getting started
-
-## Usage
-
-### Authentication
 
 
-### User
+## Uploaded files
 
-Get curren user
+### get content uploaded file
+In order to read file
 
-`GET /user`
-
->>>>>>> af2bdad7becea8b65ee523f7749ff93215eebfe6
-
-Query Parameters
-* None
-
-<<<<<<< HEAD
-Keep in mind that if you will delete operation all related files also will be deleted
+`GET /uploads/<string: filename>`
 
 
-
-### Authentication
-
-Basic Authentication with `user` and `password`
-=======
->>>>>>> af2bdad7becea8b65ee523f7749ff93215eebfe6
 
 ## Installation
 
@@ -131,11 +114,8 @@ pip install -r requirements.txt
 
 ### 6. Create database and tabless inside
 ```
-<<<<<<< HEAD
 python3 manage.py create_folder
-=======
->>>>>>> af2bdad7becea8b65ee523f7749ff93215eebfe6
-pyton3 manage.py db init
+python3 manage.py db init
 python3 manage.py db migrate
 python3 manage.py db upgrade
 ```
@@ -143,9 +123,3 @@ python3 manage.py db upgrade
 ```
 python run.py
 ```
-
-<<<<<<< HEAD
-=======
-### ps:  _Application will run on port 5000 by default_
->>>>>>> af2bdad7becea8b65ee523f7749ff93215eebfe6
-
