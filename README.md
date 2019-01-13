@@ -16,7 +16,7 @@ Query Parameters
 * user - Desired of username
 * password - Desired password
 
-This user and password will be used on *every query* excet this one in order to authenticate access rights
+This user and password will be used on *every query* except this one in order to authenticate access rights
 
 
 ### Get current user parameters
