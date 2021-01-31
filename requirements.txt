@@ -1,5 +1,5 @@
 alembic==1.0.0
-aniso8601==3.0.2
+aniso8601==8.1.1
 autoenv==1.0.0
 click==6.7
 Flask==1.1.2
