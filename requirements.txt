@@ -1,4 +1,4 @@
-alembic==1.0.0
+alembic==1.5.8
 aniso8601==3.0.2
 autoenv==1.0.0
 click==6.7
